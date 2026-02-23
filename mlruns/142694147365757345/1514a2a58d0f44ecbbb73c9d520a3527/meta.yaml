@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/142694147365757345/1514a2a58d0f44ecbbb73c9d520a3527/artifacts
+deleted_time: 1771791320091
+end_time: 1771790703293
+entry_point_name: ''
+experiment_id: '142694147365757345'
+lifecycle_stage: deleted
+run_id: 1514a2a58d0f44ecbbb73c9d520a3527
+run_name: Random_Forest
+run_uuid: 1514a2a58d0f44ecbbb73c9d520a3527
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1771790680782
+status: 3
+tags: []
+user_id: sokar
