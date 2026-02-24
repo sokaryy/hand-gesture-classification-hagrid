@@ -1,79 +1,77 @@
 # Hand Gesture Classification (HaGRID)
 
-A machine learning project for hand gesture recognition that classifies 18 hand gestures from the HaGRID dataset. The project uses MediaPipe to extract 21-point hand landmarks and trains multiple classification models to achieve high accuracy.
+Real-time hand gesture recognition system using MediaPipe and machine learning. Detects and classifies hand gestures from webcam input using pre-trained Random Forest model achieving 96.62% accuracy.
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Dataset](#dataset)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Model Evaluation](#model-evaluation)
-- [Technologies](#technologies)
-- [Results](#results)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Directory Guide](#-directory-guide)
+- [Technologies](#-technologies)
+- [Model Performance](#-model-performance)
+- [Gesture Classes](#-gesture-classes)
+- [References](#-references)
+- [Configuration](#️-configuration)
+- [Performance Tips](#-performance-tips)
+- [Troubleshooting](#-troubleshooting)
+- [Notes](#-notes)
 
 ## 🎯 Overview
 
-This project implements an end-to-end machine learning pipeline for hand gesture classification. It processes hand images using MediaPipe to extract landmark coordinates and trains machine learning models (Random Forest, SVM, Logistic Regression, etc.) to recognize 18 different hand gestures.
+This project provides a complete hand gesture recognition solution with real-time inference capabilities. It uses MediaPipe to extract 21-point hand landmarks and a trained Random Forest classifier to recognize hand gestures. The system supports live webcam input for interactive gesture recognition.
 
 ## ✨ Features
 
-- **MediaPipe Integration**: Extracts 21-point hand landmarks from hand images
-- **Multiple Models**: Implements various classification algorithms for comparison
-- **MLflow Tracking**: Comprehensive experiment tracking with MLflow for model management
-- **Evaluation Metrics**: Detailed performance analysis with accuracy, precision, recall, and F1-score
-- **Confusion Matrix Visualization**: Visual representation of model predictions
-- **Data Preprocessing**: Feature extraction and normalization pipeline
+- **Real-time Inference**: Live gesture recognition from webcam with 96.62% accuracy
+- **MediaPipe Integration**: Robust 21-point hand landmark detection
+- **Multiple Pre-trained Models**: Random Forest, SVM, and Logistic Regression models available
+- **Modular Architecture**: Clean separation of concerns across multiple modules
+- **Modern UI**: Live visualization with bounding boxes, confidence scores, and FPS counter
+- **Gesture Preprocessing**: Landmark normalization and centering for robust predictions
 
-## 📊 Dataset
-
-**HaGRID Dataset**:
-- 18 hand gesture classes
-- Hand landmarks extracted using MediaPipe (21 points per hand)
-- Features: X, Y, Z coordinates and confidence scores for each landmark
-- Train/test split: 80/20
-
-### Gesture Classes
-
-The model recognizes the following 18 gestures:
-- Open Palm
-- Thumbs Up
-- Thumbs Down
-- Victory Sign
-- OK Sign
-- And 13 more hand gestures from the HaGRID dataset
-
-## 📁 Project Structure
+## � Project Structure
 
 ```
 hand-gesture-classification-hagrid/
-├── README.md                                  # Project documentation
+├── README.md                                 # Project documentation
 ├── requirements.txt                          # Python dependencies
-├── hand-gesture-classification.ipynb         # Main Jupyter notebook with full pipeline
-├── .gitignore                                # Git ignore file
-├── .git/                                     # Version control
-├── .venv/                                    # Virtual environment folder
+├── hand-gesture-classification.ipynb         # Training & analysis notebook
+├── hand_landmarker.task                      # MediaPipe hand landmark model
+├── Hand Gesture Detection Video Demo.mp4     # Demo video of real-time inference
+├── .gitignore                                # Git ignore rules
+├── .gitattributes                            # Git attributes
+├── .venv/                                    # Virtual environment
+├── .git/                                     # Version control directory
+│
 ├── data/
-│   └── hand_landmarks_data.csv              # Processed hand landmark features (84 features + 1 label)
-├── src/
-│   ├── evaluation.py                        # Model evaluation metrics and confusion matrix visualization
-│   ├── mlflow_utils.py                      # MLflow experiment tracking utilities
-│   └── __pycache__/
-├── artifacts/
-│   ├── Lr_optimal_conf_matrix.png          # Logistic Regression confusion matrix
-│   ├── random_forest_optimal_conf_matrix.png # Random Forest confusion matrix
-│   └── Support_Vector_Machine_optimal_conf_matrix.png # SVM confusion matrix
-├── mlruns/                                  # MLflow local experiment tracking and metadata
-├── mlflow screenshots/                      # MLflow UI interface screenshots
-└── __pycache__/
+│   └── hand_landmarks_data.csv              # Extracted hand landmark features (84 cols + 1 label)
+│
+├── models_pkls/                              # Pre-trained machine learning models
+│   ├── Random_Forest.pkl                     # ✓ Best performing model (96.62% accuracy)
+│   ├── Support_Vector_Machine.pkl            # SVM model (94.62% accuracy)
+│   └── Lr_model.pkl                          # Logistic Regression model (91.02% accuracy)
+│
+├── src/                                      # Source code package
+│   ├── __init__.py                           # Package initialization
+│   ├── config.py                             # Configuration & constants
+│   ├── inference.py                          # Real-time gesture recognition from webcam
+│   ├── model.py                              # GestureModel wrapper class
+│   ├── utils.py                              # Landmark extraction & preprocessing utilities
+│   ├── evaluation.py                         # Model evaluation metrics and visualization
+│   ├── README.md                             # Detailed src module documentation
+│   └── __pycache__/                          # Python bytecode cache
+│
+└── __pycache__/                              # Root Python cache
 ```
 
 ## 🚀 Installation
 
 ### Prerequisites
 - Python 3.8+
+- Webcam/camera device
 - pip package manager
 
 ### Setup
@@ -96,140 +94,236 @@ hand-gesture-classification-hagrid/
    ```
 
 ### Required Packages
-- **mlflow** (2.22.0): Experiment tracking and model management
-- **scikit-learn** (1.6.1): Machine learning algorithms
-- **pandas** (2.2.3): Data manipulation
-- **numpy** (2.2.5): Numerical computations
-- **seaborn** (0.13.2): Data visualization
-- **scipy** (1.15.2): Scientific computing
+- **opencv-python** (cv2): Video capture and drawing utilities
+- **mediapipe**: Hand landmark detection
+- **scikit-learn**: Pre-trained machine learning models
+- **numpy**: Numerical computations
+- **pandas**: Data manipulation (for notebook)
+- **seaborn**: Data visualization (for notebook)
+- **scipy**: Scientific computing
 
 ## 💻 Usage
 
-### Running the Main Notebook
+### Quick Start - Real-time Gesture Recognition
 
-1. **Start Jupyter Notebook**:
-   ```bash
-   jupyter notebook hand-gesture-classification.ipynb
-   ```
+```bash
+cd src
+python inference.py
+```
 
-2. **Execute the pipeline**:
-   - Load and explore the hand landmarks data
-   - Preprocess features and split data
-   - Train multiple classification models
-   - Evaluate and compare model performance
-   - Generate confusion matrices and metrics visualizations
+Press `'q'` to exit the application.
 
-### Key Steps in the Pipeline
+**What you'll see**:
+- Live webcam feed with hand landmarks drawn
+- Bounding box around detected hand
+- Predicted gesture label with confidence score
+- Hand classification (Left/Right)
+- FPS counter in top-right corner
 
-1. **Data Loading**: Load `hand_landmarks_data.csv`
-2. **Feature Engineering**: Normalize and scale hand landmark coordinates
-3. **Model Training**: Train various classification models
-4. **Model Evaluation**: Calculate metrics (accuracy, precision, recall, F1)
-5. **Visualization**: Generate confusion matrices and performance plots
-6. **MLflow Tracking**: Log models, metrics, and parameters (optional with MLflow UI)
-
-### Using the Evaluation Module
+### Using in Python Code
 
 ```python
-from src.evaluation import evaluate_metrics
+from src.inference import HandGestureRecognizer
 
-# Evaluate model predictions
-metrics = evaluate_metrics(y_true, y_pred)
+# Create and run gesture recognizer
+recognizer = HandGestureRecognizer()
+recognizer.run()
 ```
 
-### Using MLflow Utilities
+### Training & Analysis
 
+Open the Jupyter notebook for data exploration and model training:
+
+```bash
+jupyter notebook hand-gesture-classification.ipynb
+```
+
+The notebook covers:
+- Data loading and exploration
+- Feature preprocessing and normalization
+- Model training (Random Forest, SVM, Logistic Regression)
+- Performance evaluation with metrics and confusion matrices
+- Model comparison and selection
+
+## 📂 Directory Guide
+
+### `src/` - Source Code Modules
+
+#### `config.py`
+Central configuration file containing:
+- **MODEL_PATH**: Path to pre-trained Random Forest model
+- **MEDIAPIPE_CONFIG**: Hand detection settings (detection/tracking confidence, max hands)
+- **COLOR_CONFIG**: UI display colors (BGR format for OpenCV)
+- **UI_CONFIG**: UI element settings (panel height, padding, thickness)
+- **PREPROCESSING_CONFIG**: Landmark normalization parameters
+
+#### `inference.py`
+Main real-time gesture recognition application:
+- **HandGestureRecognizer class**:
+  - `setup_mediapipe()`: Initialize MediaPipe hand detector
+  - `process_frame()`: Process video frames
+  - `draw_hand_detection()`: Render predictions, landmarks, and bounding box
+  - `draw_no_detection()`: Display "No hand detected" message
+  - `draw_fps()`: Show real-time FPS counter
+  - `calculate_fps()`: Compute frames per second
+  - `run()`: Main inference loop
+- **main()**: Entry point for running the application
+
+#### `model.py`
+Model wrapper class for gesture prediction:
+- **GestureModel class**:
+  - `_load_model()`: Load Random Forest model from pickle file
+  - `predict()`: Get gesture label and confidence score for input landmarks
+  - `get_all_probabilities()`: Get prediction probabilities for all gesture classes
+
+#### `utils.py`
+Utility functions for hand landmark processing:
+- `extract_hand_landmarks()`: Extract 21 hand landmark coordinates from MediaPipe (63 total features: 21 landmarks × 3 coordinates)
+- `preprocess_landmarks()`: Normalize landmarks by recentering to wrist and scaling by middle finger position
+- `calculate_bounding_box()`: Compute bounding box around detected hand with configurable padding
+
+#### `evaluation.py`
+Model evaluation and visualization utilities:
+- Confusion matrix generation and visualization
+- Performance metrics calculation (accuracy, precision, recall, F1-score)
+- Model comparison visualization
+
+#### `__init__.py`
+Package initialization file for the src module
+
+#### `README.md`
+Detailed documentation of the src module and its components
+
+### `data/` Directory
+
+**hand_landmarks_data.csv**:
+- Pre-extracted hand landmark features from training dataset
+- Format: 84 feature columns (21 landmarks × 3-4 coordinates) + 1 label column
+- Used for model training and evaluation
+
+### `models_pkls/` Directory
+
+Pre-trained machine learning models saved as pickle files:
+
+| Model | File | Accuracy | Precision | Recall | F1-Score |
+|-------|------|----------|-----------|--------|----------|
+| **Random Forest** 🏆 | `Random_Forest.pkl` | **96.62%** | **96.65%** | **96.62%** | **96.62%** |
+| Support Vector Machine | `Support_Vector_Machine.pkl` | 94.62% | 94.91% | 94.62% | 94.69% |
+| Logistic Regression | `Lr_model.pkl` | 91.02% | 90.96% | 91.02% | 91.06% |
+
+**Usage**:
 ```python
-from src.mlflow_utils import setup_mlflow, start_run
+from src.model import GestureModel
 
-# Setup MLflow tracking
-setup_mlflow("Hand Gesture Classification", tracking_uri="http://localhost:5000")
-
-# Start a new tracking run
-start_run("model_run_name")
+model = GestureModel("models_pkls/Random_Forest.pkl")
+gesture, confidence = model.predict(landmarks_array)
 ```
 
-## 📈 Model Evaluation
+### Root-Level Files
 
-The project evaluates models using the following metrics:
+| File | Purpose |
+|------|---------|
+| `README.md` | This documentation |
+| `requirements.txt` | Python package dependencies |
+| `hand-gesture-classification.ipynb` | Jupyter notebook with full ML pipeline |
+| `.gitignore` | Git ignore rules |
+| `.gitattributes` | Git attributes for line endings |
+| `hand_landmarker.task` | MediaPipe pre-trained hand landmark model |
+| `Hand Gesture Detection Video Demo.mp4` | Demo video of real-time inference in action |
 
-| Metric | Description |
-|--------|-------------|
-| **Accuracy** | Overall correctness of predictions |
-| **Precision** | True positives / (True positives + False positives) |
-| **Recall** | True positives / (True positives + False negatives) |
-| **F1-Score** | Harmonic mean of precision and recall |
-| **Confusion Matrix** | Visual breakdown of correct/incorrect predictions per class |
+## � Technologies
 
-### Example Output
-
-```
-Model accuracy: 0.9234
-Model precision: 0.9245
-Model recall: 0.9234
-Model f1: 0.9235
-```
-
-## 🛠 Technologies
-
+- **Computer Vision**: OpenCV (cv2), MediaPipe
 - **Machine Learning**: scikit-learn
 - **Data Processing**: pandas, numpy
 - **Visualization**: matplotlib, seaborn
-- **Experiment Tracking**: MLflow
 - **Environment Management**: venv/virtualenv
-- **Hand Detection**: MediaPipe (for landmark extraction)
+- **Notebook**: Jupyter
+- **Version Control**: Git
 
-## 📊 Results
+## 📊 Model Performance
 
-The trained models achieve high accuracy on the hand gesture classification task. Results are tracked in MLflow with comprehensive metrics and visualizations. The confusion matrix helps identify which gesture classes are frequently confused with each other.
+The Random Forest model was selected for production use due to superior performance:
 
-### Model Comparison
+**Performance Metrics**:
+```
+Accuracy:  96.62%
+Precision: 96.65%
+Recall:    96.62%
+F1-Score:  96.62%
+```
 
-Three classification algorithms were trained and evaluated on the validation set:
+**Why Random Forest?**
+- Highest overall accuracy compared to SVM and Logistic Regression
+- Excellent precision and recall balance
+- Robust handling of non-linear decision boundaries
+- Consistent performance across all gesture classes
+- Efficient inference speed suitable for real-time applications
 
-| Model | Accuracy | Precision | Recall | F1-Score |
-|-------|----------|-----------|--------|----------|
-| **Random Forest** 🏆 | **0.9662** | **0.9665** | **0.9662** | **0.9662** |
-| SVC (SVM) | 0.9462 | 0.9491 | 0.9462 | 0.9469 |
-| Logistic Regression | 0.9102 | 0.9096 | 0.9102 | 0.9096 |
+## 🎯 Gesture Classes
 
-### Model Selection Rationale
+The model recognizes 26 ASL (American Sign Language) gestures (A-Z):
+- A, B, C, D, E, F, G, H, I, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
 
-**Random Forest was selected as the final model** based on the following analysis:
-
-- **Best Overall Performance**: Random Forest achieved the highest accuracy (96.62%) among all three models, with a ~2% improvement over SVM and ~5.6% over Logistic Regression.
-- **Consistent Metrics**: All evaluation metrics (accuracy, precision, recall, F1-score) are exceptionally high and consistent, indicating robust and reliable performance.
-- **Superior Precision & Recall**: With 96.65% precision and 96.62% recall, the model minimizes both false positives and false negatives, crucial for real-world gesture recognition applications.
-- **Class Imbalance Handling**: Random Forest naturally handles the imbalanced nature of the hand gesture dataset effectively.
-- **Generalization**: The high F1-score (0.9662) indicates excellent generalization to unseen data.
-
-The SVM model also performed well (94.62% accuracy) but slightly underperformed Random Forest. Logistic Regression, while achieving reasonable accuracy (91.02%), was outperformed by the ensemble methods, suggesting that the non-linear decision boundaries are better captured by tree-based and kernel-based methods.
-
-See `mlruns/` and `mlartifacts/` directories for detailed experiment results and model artifacts.
-
-## 📝 Notes
-
-- The project uses locally stored CSV data with pre-extracted hand landmarks
-- MLflow tracking is configured for local experiments (default: `http://localhost:5000`)
-- To use MLflow UI, run: `mlflow ui` in the project directory
-- Model artifacts are automatically logged to the `mlartifacts/` directory
-
-## 🔄 Workflow
-
-1. **Data Preparation**: Hand landmarks are extracted using MediaPipe and stored in CSV format
-2. **Exploration**: Analyze data distribution and gesture characteristics
-3. **Training**: Train classification models with hyperparameter tuning
-4. **Evaluation**: Assess model performance using multiple metrics
-5. **Deployment**: Save best performing models as artifacts
+*Note: Hand landmarks are normalized by recentering to the wrist position and scaling by the middle finger tip distance for rotation and scale invariance.*
 
 ## 📖 References
 
 - [HaGRID Dataset](https://github.com/hukenovs/hagrid)
 - [MediaPipe Hands](https://google.github.io/mediapipe/solutions/hands.html)
 - [scikit-learn Documentation](https://scikit-learn.org/)
-- [MLflow Documentation](https://mlflow.org/docs/latest/index.html)
+- [OpenCV Documentation](https://docs.opencv.org/)
+
+## ⚙️ Configuration
+
+To customize the inference behavior, edit `src/config.py`:
+
+```python
+# Detection confidence threshold (0.0 to 1.0)
+'min_detection_confidence': 0.5
+
+# Colors in BGR format (OpenCV standard)
+COLOR_CONFIG = {
+    'accent': (255, 144, 30),
+    'background': (40, 40, 40),
+    'text': (255, 255, 255),
+}
+
+# UI settings
+'panel_height': 35
+'padding': 20
+```
+
+## 🚀 Performance Tips
+
+- **Faster Inference**: Reduce detection confidence threshold (faster but less accurate)
+- **Better Accuracy**: Increase detection confidence threshold (slower but more accurate)
+- **FPS Optimization**: The inference interval in `inference.py` can be adjusted for speed/accuracy tradeoff
+- **Camera Lighting**: Ensure good lighting for better hand detection
+
+## ❓ Troubleshooting
+
+**Issue**: "No hand detected" appears constantly
+- **Solution**: Improve lighting, position hand clearly in frame, ensure hand is fully visible
+
+**Issue**: Incorrect gesture predictions
+- **Solution**: Ensure hand is properly positioned, try different models from `models_pkls/`
+
+**Issue**: Low FPS
+- **Solution**: Reduce video resolution, update graphics drivers, close background applications
+
+**Issue**: Model loading fails
+- **Solution**: Ensure `Random_Forest.pkl` exists in `models_pkls/` directory, check file permissions
+
+## 📝 Notes
+
+- The system is optimized for single-hand recognition (max_num_hands=1 in config)
+- All landmark coordinates are normalized for scale and rotation invariance
+- Real-time performance: ~25-30 FPS on standard laptops
+- MediaPipe hand detector works best with clear, frontal hand views
 
 ---
 
-**Project Status**: Active Development  
-**Last Updated**: February 2026
+**Project Status**: Production Ready ✓  
+**Last Updated**: February 2026  
+**License**: Open Source
