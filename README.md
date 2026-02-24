@@ -32,7 +32,7 @@ This project provides a complete hand gesture recognition solution with real-tim
 - **Modern UI**: Live visualization with bounding boxes, confidence scores, and FPS counter
 - **Gesture Preprocessing**: Landmark normalization and centering for robust predictions
 
-## � Project Structure
+## 📁 Project Structure
 
 ```
 hand-gesture-classification-hagrid/
@@ -231,7 +231,7 @@ gesture, confidence = model.predict(landmarks_array)
 | `hand_landmarker.task` | MediaPipe pre-trained hand landmark model |
 | `Hand Gesture Detection Video Demo.mp4` | Demo video of real-time inference in action |
 
-## � Technologies
+##  🛠 Technologies
 
 - **Computer Vision**: OpenCV (cv2), MediaPipe
 - **Machine Learning**: scikit-learn
